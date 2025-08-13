@@ -1,6 +1,6 @@
 # Survival Analysis of Lung Cancer Patients in Bombay Using Cox Proportional Hazards Model
 
-## Project Overview
+## Overview
 This project investigates survival outcomes among lung cancer patients from the Bombay Lung Cancer Registry using **advanced survival analysis methods**. The dataset contains 682 patients registered between January 1, 1989, and December 31, 1991. Survival times are measured from diagnosis to death or censoring.  
 
 The primary objective is to explore factors affecting patient survival, including demographic, socio-economic, and clinical characteristics. Key goals include:  
