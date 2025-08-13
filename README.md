@@ -22,10 +22,10 @@ Install missing packages in R with:
 ```r
 install.packages(c("survival", "survminer", "dplyr", "car"))
 ```
-survival – for Cox proportional hazards models and survival analysis.
-survminer – for Kaplan-Meier curves and forest plots.
-dplyr – for data manipulation.
-car – for regression diagnostics and other statistical utilities.
+- survival – for Cox proportional hazards models and survival analysis.
+- survminer – for Kaplan-Meier curves and forest plots.
+- dplyr – for data manipulation.
+- car – for regression diagnostics and other statistical utilities.
 
 ## Statistical Methods
 This analysis uses the following **statistical methods**:  
@@ -108,5 +108,3 @@ The dataset used in this project is `bombay_lung_cancer.csv`, which contains the
 - Therneau, T. M. (2022). *A Package for Survival Analysis in R*. R package version 3.5-2.  
 - Kassambara, A., & Kosinski, M. (2021). *survminer: Drawing Survival Curves using ‘ggplot2’*. R package version 0.4.9.  
 - Bombay Lung Cancer Registry, Mumbai Municipal Corporation (1989–1991).
-
-
