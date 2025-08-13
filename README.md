@@ -46,14 +46,14 @@ The dataset used in this project is `bombay_lung_cancer.csv`, which contains the
 │
 ├─ output/
 │ ├─ tables/
-│ │ ├─ summary/ # Cox model summaries
-│ │ ├─ anova/ # ANOVA results for each model
-│ │ └─ PH_tests/ # Proportional hazards assumption tests
+│ │ ├─ summary/   # Cox model summaries
+│ │ ├─ anova/     # ANOVA results for each model
+│ │ └─ PH_tests/  # Proportional hazards assumption tests
 │ │
 │ └─ plots/
-│ ├─ KM/ # Kaplan-Meier survival curves
-│ ├─ PH/ # Schoenfeld residual plots
-│ └─ Forest/ # Forest plots for hazard ratios
+│ ├─ KM/          # Kaplan-Meier survival curves
+│ ├─ PH/          # Schoenfeld residual plots
+│ └─ Forest/      # Forest plots for hazard ratios
 │
 ├─ scripts/
 │ └─ survival_analysis.R # Full analysis script
