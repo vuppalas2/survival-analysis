@@ -11,6 +11,18 @@ The primary objective is to explore factors affecting patient survival, includin
 - Visualizing survival patterns with **Kaplan-Meier curves** and hazard ratios with **forest plots**.  
 - Developing nested Cox models to identify the most parsimonious predictive model.  
 
+## Prerequisites
+
+### Software
+- **R** (version 4.0 or later recommended)
+
+### Required R Packages
+Install missing packages in R with:
+
+```r
+install.packages(c("survival", "survminer", "dplyr", "car"))
+```
+
 ## Statistical Methods
 This analysis uses the following **statistical methods**:  
 1. **Descriptive Statistics**: Median, IQR, minimum, maximum for continuous variables; counts and proportions for categorical variables.  
