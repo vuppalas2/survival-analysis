@@ -22,6 +22,10 @@ Install missing packages in R with:
 ```r
 install.packages(c("survival", "survminer", "dplyr", "car"))
 ```
+survival – for Cox proportional hazards models and survival analysis.
+survminer – for Kaplan-Meier curves and forest plots.
+dplyr – for data manipulation.
+car – for regression diagnostics and other statistical utilities.
 
 ## Statistical Methods
 This analysis uses the following **statistical methods**:  
