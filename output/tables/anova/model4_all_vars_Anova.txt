@@ -1,0 +1,10 @@
+Analysis of Deviance Table (Type III tests)
+               LR Chisq Df Pr(>Chisq)    
+sex              0.2691  1     0.6040    
+age              0.1784  1     0.6728    
+education       10.3024  1     0.0013 ** 
+religion         0.1341  2     0.9351    
+marital_status   0.8408  2     0.6568    
+tum0r_type      30.8912  2     <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

@@ -1,0 +1,35 @@
+Call:
+coxph(formula = Surv(surv_time, event) ~ sex + age + education + 
+    religion + marital_status + tum0r_type, data = mydata, ties = "breslow")
+
+  n= 682, number of events= 442 
+
+                                       coef  exp(coef)   se(coef)      z Pr(>|z|)    
+sexFemale                        -0.0678024  0.9344451  0.1315196 -0.516 0.606182    
+age                               0.0017094  1.0017109  0.0040509  0.422 0.673038    
+educationIlliterate               0.4279481  1.5341065  0.1376331  3.109 0.001875 ** 
+religionChristian                 0.0701475  1.0726664  0.1909542  0.367 0.713356    
+religionMuslim                    0.0006721  1.0006724  0.1239626  0.005 0.995674    
+marital_statusSeparated/Divorced -0.2289516  0.7953670  0.2528818 -0.905 0.365269    
+marital_statusMarried            -0.0824466  0.9208606  0.1516541 -0.544 0.586683    
+tum0r_typeRegional                0.7538155  2.1250928  0.1409371  5.349 8.86e-08 ***
+tum0r_typeAdvanced                0.4935607  1.6381387  0.1333527  3.701 0.000215 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+                                 exp(coef) exp(-coef) lower .95 upper .95
+sexFemale                           0.9344     1.0702    0.7221     1.209
+age                                 1.0017     0.9983    0.9938     1.010
+educationIlliterate                 1.5341     0.6518    1.1714     2.009
+religionChristian                   1.0727     0.9323    0.7378     1.560
+religionMuslim                      1.0007     0.9993    0.7848     1.276
+marital_statusSeparated/Divorced    0.7954     1.2573    0.4845     1.306
+marital_statusMarried               0.9209     1.0859    0.6841     1.240
+tum0r_typeRegional                  2.1251     0.4706    1.6122     2.801
+tum0r_typeAdvanced                  1.6381     0.6104    1.2614     2.127
+
+Concordance= 0.602  (se = 0.015 )
+Likelihood ratio test= 43.6  on 9 df,   p=2e-06
+Wald test            = 39.76  on 9 df,   p=8e-06
+Score (logrank) test = 40.71  on 9 df,   p=6e-06
+

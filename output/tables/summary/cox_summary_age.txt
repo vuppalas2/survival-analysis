@@ -1,0 +1,16 @@
+Call:
+coxph(formula = Surv(surv_time, event) ~ age, data = mydata)
+
+  n= 682, number of events= 442 
+
+        coef exp(coef) se(coef)     z Pr(>|z|)
+age 0.003838  1.003845 0.004044 0.949    0.343
+
+    exp(coef) exp(-coef) lower .95 upper .95
+age     1.004     0.9962    0.9959     1.012
+
+Concordance= 0.513  (se = 0.015 )
+Likelihood ratio test= 0.9  on 1 df,   p=0.3
+Wald test            = 0.9  on 1 df,   p=0.3
+Score (logrank) test = 0.9  on 1 df,   p=0.3
+

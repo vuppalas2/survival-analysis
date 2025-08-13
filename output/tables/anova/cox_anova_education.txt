@@ -1,0 +1,9 @@
+Analysis of Deviance Table
+ Cox model: response is Surv(surv_time, event)
+Terms added sequentially (first to last)
+
+           loglik  Chisq Df Pr(>|Chi|)    
+NULL      -2534.0                         
+education -2528.4 11.108  1      9e-04 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1

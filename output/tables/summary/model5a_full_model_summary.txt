@@ -1,0 +1,35 @@
+Call:
+coxph(formula = Surv(surv_time, event) ~ sex + age + education + 
+    religion + marital_status + tum0r_type, data = mydata)
+
+  n= 682, number of events= 442 
+
+                                      coef exp(coef)  se(coef)      z Pr(>|z|)    
+sexFemale                        -0.068339  0.933944  0.131538 -0.520 0.603386    
+age                               0.001724  1.001725  0.004051  0.425 0.670478    
+educationIlliterate               0.431316  1.539281  0.137636  3.134 0.001726 ** 
+religionChristian                 0.073674  1.076456  0.190971  0.386 0.699653    
+religionMuslim                    0.001761  1.001762  0.123972  0.014 0.988669    
+marital_statusSeparated/Divorced -0.231900  0.793026  0.252886 -0.917 0.359136    
+marital_statusMarried            -0.083723  0.919686  0.151653 -0.552 0.580902    
+tum0r_typeRegional                0.757406  2.132736  0.140948  5.374 7.72e-08 ***
+tum0r_typeAdvanced                0.494762  1.640108  0.133344  3.710 0.000207 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+                                 exp(coef) exp(-coef) lower .95 upper .95
+sexFemale                           0.9339     1.0707    0.7217     1.209
+age                                 1.0017     0.9983    0.9938     1.010
+educationIlliterate                 1.5393     0.6497    1.1753     2.016
+religionChristian                   1.0765     0.9290    0.7404     1.565
+religionMuslim                      1.0018     0.9982    0.7857     1.277
+marital_statusSeparated/Divorced    0.7930     1.2610    0.4831     1.302
+marital_statusMarried               0.9197     1.0873    0.6832     1.238
+tum0r_typeRegional                  2.1327     0.4689    1.6179     2.811
+tum0r_typeAdvanced                  1.6401     0.6097    1.2629     2.130
+
+Concordance= 0.602  (se = 0.015 )
+Likelihood ratio test= 44.06  on 9 df,   p=1e-06
+Wald test            = 40.17  on 9 df,   p=7e-06
+Score (logrank) test = 41.14  on 9 df,   p=5e-06
+

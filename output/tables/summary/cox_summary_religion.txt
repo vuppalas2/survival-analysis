@@ -1,0 +1,18 @@
+Call:
+coxph(formula = Surv(surv_time, event) ~ religion, data = mydata)
+
+  n= 682, number of events= 442 
+
+                      coef exp(coef) se(coef)      z Pr(>|z|)
+religionChristian -0.01633   0.98380  0.18876 -0.087    0.931
+religionMuslim    -0.03033   0.97013  0.12213 -0.248    0.804
+
+                  exp(coef) exp(-coef) lower .95 upper .95
+religionChristian    0.9838      1.016    0.6796     1.424
+religionMuslim       0.9701      1.031    0.7636     1.232
+
+Concordance= 0.498  (se = 0.013 )
+Likelihood ratio test= 0.06  on 2 df,   p=1
+Wald test            = 0.06  on 2 df,   p=1
+Score (logrank) test = 0.06  on 2 df,   p=1
+

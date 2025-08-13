@@ -1,0 +1,19 @@
+Call:
+coxph(formula = Surv(surv_time, event) ~ education, data = mydata, 
+    ties = "breslow")
+
+  n= 682, number of events= 442 
+
+                      coef exp(coef) se(coef)    z Pr(>|z|)   
+educationIlliterate 0.4072    1.5026   0.1285 3.17  0.00153 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+                    exp(coef) exp(-coef) lower .95 upper .95
+educationIlliterate     1.503     0.6655     1.168     1.933
+
+Concordance= 0.535  (se = 0.01 )
+Likelihood ratio test= 10.97  on 1 df,   p=9e-04
+Wald test            = 10.05  on 1 df,   p=0.002
+Score (logrank) test = 10.19  on 1 df,   p=0.001
+

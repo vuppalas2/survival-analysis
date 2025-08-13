@@ -1,0 +1,397 @@
+# 1. Load Required Libraries -----------------------------------
+library(survival)    # Survival analysis functions
+library(dplyr)       # Data manipulation and summarization
+library(car)         # For Anova tests
+library(survminer)   # For Kaplan-Meier and forest plots
+
+# 2. Load Data -------------------------------------------------
+setwd("/Users/sushmavuppala/Desktop/PROJECTS/survival_analysis")
+mydata <- read.csv("data/bombay_lung_cancer.csv")
+str(mydata) 
+
+# 3. Data Preparation -------------------------------------------
+mydata$sex <- factor(mydata$sex, levels = c(1, 2), labels = c("Male", "Female"))
+mydata$education <- factor(mydata$education, levels = c(1, 2), labels = c("Literate", "Illiterate"))
+mydata$religion <- factor(mydata$religion, levels = c(1, 2, 3), labels = c("Hindu", "Christian", "Muslim"))
+mydata$marital_status <- factor(mydata$marital_status, levels = c(1, 2, 3), labels = c("Single", "Separated/Divorced", "Married"))
+mydata$tum0r_type <- factor(mydata$tum0r_type, levels = c(1, 2, 3), labels = c("Local", "Regional", "Advanced"))
+
+mydata$event <- 1 - mydata$censored  # Event indicator
+
+
+# 4. Descriptive Statistics -------------------------------------
+
+# 4.1 Continuous variables (surv_time, age)
+continuous_summary <- mydata %>%
+  summarize(
+    n_surv_time = sum(!is.na(surv_time)),
+    nmiss_surv_time = sum(is.na(surv_time)),
+    Median_surv_time = median(surv_time, na.rm = TRUE),
+    p25_surv_time = quantile(surv_time, 0.25, na.rm = TRUE),
+    p75_surv_time = quantile(surv_time, 0.75, na.rm = TRUE),
+    Min_surv_time = min(surv_time, na.rm = TRUE),
+    Max_surv_time = max(surv_time, na.rm = TRUE),
+    n_age = sum(!is.na(age)),
+    nmiss_age = sum(is.na(age)),
+    Median_age = median(age, na.rm = TRUE),
+    p25_age = quantile(age, 0.25, na.rm = TRUE),
+    p75_age = quantile(age, 0.75, na.rm = TRUE),
+    Min_age = min(age, na.rm = TRUE),
+    Max_age = max(age, na.rm = TRUE)
+  )
+print(continuous_summary)
+
+# 4.2 Categorical variables
+categorical_summary <- mydata %>%
+  summarize(
+    sex_freq = list(table(sex)),
+    sex_prop = list(prop.table(table(sex))),
+    education_freq = list(table(education)),
+    education_prop = list(prop.table(table(education))),
+    religion_freq = list(table(religion)),
+    religion_prop = list(prop.table(table(religion))),
+    marital_status_freq = list(table(marital_status)),
+    marital_status_prop = list(prop.table(table(marital_status))),
+    tum0r_type_freq = list(table(tum0r_type)),
+    tum0r_type_prop = list(prop.table(table(tum0r_type))),
+    censored_freq = list(table(censored)),
+    censored_prop = list(prop.table(table(censored)))
+  )
+print(categorical_summary)
+
+# 4.3 Continuous variables summarized by categorical variables
+summary_by_group <- function(data, group_var) {
+  data %>%
+    group_by({{group_var}}) %>%
+    summarize(
+      n_surv_time = sum(!is.na(surv_time)),
+      nmiss_surv_time = sum(is.na(surv_time)),
+      Median_surv_time = median(surv_time, na.rm = TRUE),
+      p25_surv_time = quantile(surv_time, 0.25, na.rm = TRUE),
+      p75_surv_time = quantile(surv_time, 0.75, na.rm = TRUE),
+      Min_surv_time = min(surv_time, na.rm = TRUE),
+      Max_surv_time = max(surv_time, na.rm = TRUE),
+      n_age = sum(!is.na(age)),
+      nmiss_age = sum(is.na(age)),
+      Median_age = median(age, na.rm = TRUE),
+      p25_age = quantile(age, 0.25, na.rm = TRUE),
+      p75_age = quantile(age, 0.75, na.rm = TRUE),
+      Min_age = min(age, na.rm = TRUE),
+      Max_age = max(age, na.rm = TRUE)
+    )
+}
+
+sex_summary <- summary_by_group(mydata, sex)
+education_summary <- summary_by_group(mydata, education)
+religion_summary <- summary_by_group(mydata, religion)
+marital_status_summary <- summary_by_group(mydata, marital_status)
+tum0r_type_summary <- summary_by_group(mydata, tum0r_type)
+censored_summary <- summary_by_group(mydata, censored)
+
+print(sex_summary)
+print(education_summary)
+print(religion_summary)
+print(marital_status_summary)
+print(tum0r_type_summary)
+print(censored_summary)
+
+# Create output directories 
+if (!dir.exists("output")) dir.create("output")
+
+# Tables
+if (!dir.exists("output/tables")) dir.create("output/tables")
+if (!dir.exists("output/tables/summary")) dir.create("output/tables/summary")
+if (!dir.exists("output/tables/anova")) dir.create("output/tables/anova")
+if (!dir.exists("output/tables/PH_tests")) dir.create("output/tables/PH_tests")
+
+# Plots
+if (!dir.exists("output/plots")) dir.create("output/plots")
+if (!dir.exists("output/plots/KM")) dir.create("output/plots/KM")
+if (!dir.exists("output/plots/Forest")) dir.create("output/plots/Forest")
+if (!dir.exists("output/plots/PH")) dir.create("output/plots/PH")
+
+# 5. Cox Proportional Hazards Model and Kaplan-Meier Plots -------
+
+# 5.1 Cox model with education only
+model1 <- coxph(Surv(surv_time, event) ~ education, ties = "breslow", data = mydata)
+capture.output(summary(model1), file = "output/tables/summary/model1_education_summary.txt")
+capture.output(round(Anova(model1, type = 3), 4), file = "output/tables/anova/model1_education_Anova.txt")
+
+# Kaplan-Meier curve by education
+km1 <- survfit(Surv(surv_time, event) ~ education, data = mydata)
+
+plot1 <- ggsurvplot(
+  km1,
+  data = mydata,
+  pval = TRUE,
+  conf.int = TRUE,
+  title = "Kaplan-Meier Curve by Education",
+  xlab = "Survival Time",
+  ylab = "Survival Probability",
+  legend.title = "Education",
+  palette = c("#0072B2", "#D55E00"),   # Nice clean colors
+  ggtheme = theme_minimal() +
+    theme(plot.title = element_text(hjust = 0.5))  # Center title
+)
+
+print(plot1)
+ggsave("output/plots/KM/KM_plot_education.png", plot = plot1$plot, width = 7, height = 5)
+
+# PH test
+ph_test1 <- cox.zph(model1)
+capture.output(ph_test1, file = "output/tables/PH_tests/PH_test_model1.txt")
+png("output/plots/PH/PH_Schoenfeld_residuals_model1.png", width = 800, height = 600)
+plot(ph_test1)
+dev.off()
+
+# 5.2 Time-dependent covariate Cox model for education
+cut.points <- unique(mydata$surv_time[mydata$event == 1])
+mydata2 <- survSplit(data = mydata, cut = cut.points, end = "surv_time", start = "start_time", event = "event")
+mydata2$education_num <- as.numeric(mydata2$education)
+mydata2$x2 <- mydata2$education_num * mydata2$start_time
+mydata2$x3 <- mydata2$education_num * mydata2$surv_time
+
+model2 <- coxph(Surv(start_time, surv_time, event) ~ education + x2 + x3, data = mydata2)
+capture.output(summary(model2), file = "output/tables/summary/model2_time_dependent_summary.txt")
+capture.output(round(Anova(model2, type = 3), 4), file = "output/tables/anova/model2_time_dependent_Anova.txt")
+
+
+# PH test
+ph_test2 <- cox.zph(model2)
+capture.output(ph_test2, file = "output/tables/PH_tests/PH_test_model2.txt")
+png("output/plots/PH/PH_Schoenfeld_residuals_model2.png", width = 800, height = 600)
+plot(ph_test2)
+dev.off()
+
+
+# 6. Univariate Cox models for all variables  ------------------
+
+mydata$event <- 1 - mydata$censored
+
+#I. Sex
+# Cox model for sex
+model_sex <- coxph(Surv(surv_time, event) ~ sex, ties = "breslow", data = mydata)
+capture.output(summary(model_sex), file = "output/tables/summary/cox_summary_sex.txt")
+capture.output(round(Anova(model_sex, type = 3), 4), file = "output/tables/anova/cox_anova_sex.txt")
+
+# KM plot for sex
+km_sex <- survfit(Surv(surv_time, event) ~ sex, data = mydata)
+p_sex <- ggsurvplot(
+  km_sex,
+  data = mydata,
+  pval = TRUE,
+  conf.int = TRUE,
+  xlab = "Survival Time",
+  ylab = "Survival Probability",
+  title = "Kaplan-Meier Survival Curve by Sex",
+  legend.title = "Sex",
+  palette = c("#0072B2", "#D55E00"),   
+  ggtheme = theme_minimal() + theme(plot.title = element_text(hjust = 0.5)) 
+)
+
+print(p_sex)
+ggsave("output/plots/KM/KM_plot_sex.png", plot = p_sex$plot, width = 7, height = 5)
+
+
+
+#II. Age
+# Cox model
+model_age <- coxph(Surv(surv_time, event) ~ age, data = mydata)
+capture.output(summary(model_age), file = "output/tables/summary/cox_summary_age.txt")
+capture.output(round(Anova(model_age, type = 3), 4), file = "output/tables/anova/cox_anova_age.txt")
+
+# KM plot by age group
+mydata$age_group <- cut(mydata$age, breaks = c(0,40,60,80,100), right = FALSE,
+                        labels = c("0-39", "40-59", "60-79", "80+"))
+km_age <- survfit(Surv(surv_time, event) ~ age_group, data = mydata)
+p_age <- ggsurvplot(
+  km_age,
+  data = mydata,
+  pval = TRUE,
+  conf.int = TRUE,
+  xlab = "Survival Time (days)",
+  ylab = "Survival Probability",
+  title = "Kaplan-Meier Survival Curve by Age Group",
+  legend.title = "Age Group",
+  palette = c("#0072B2", "#D55E00", "#009E73", "#CC79A7"),
+  ggtheme = theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
+)
+print(p_age)
+ggsave("output/plots/KM/KM_plot_age.png", plot = p_age$plot, width = 7, height = 5)
+
+
+#III. Education 
+# Cox model for education
+model_education <- coxph(Surv(surv_time, event) ~ education, data = mydata)
+capture.output(summary(model_education), file = "output/tables/summary/cox_summary_education.txt")
+capture.output(round(Anova(model_education, type = 3), 4), file = "output/tables/anova/cox_anova_education.txt")
+
+# KM plot by education
+km_education <- survfit(Surv(surv_time, event) ~ education, data = mydata)
+p_education <- ggsurvplot(
+  km_education,
+  data = mydata,
+  pval = TRUE,
+  conf.int = TRUE,
+  xlab = "Survival Time (days)",
+  ylab = "Survival Probability",
+  title = "Kaplan-Meier Survival Curve by Education",
+  legend.title = "Education",
+  palette = c("#0072B2", "#D55E00"),
+  ggtheme = theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
+)
+
+print(p_education)
+ggsave("output/plots/KM/KM_plot_education.png", plot = p_education$plot, width = 7, height = 5)
+
+#IV. Religion
+# Cox model for religion
+model_religion <- coxph(Surv(surv_time, event) ~ religion, data = mydata)
+capture.output(summary(model_religion), file = "output/tables/summary/cox_summary_religion.txt")
+capture.output(round(Anova(model_religion, type = 3), 4), file = "output/tables/anova/cox_anova_religion.txt")
+
+# KM plot by religion
+km_religion <- survfit(Surv(surv_time, event) ~ religion, data = mydata)
+p_religion <- ggsurvplot(
+  km_religion,
+  data = mydata,
+  pval = TRUE,
+  conf.int = TRUE,
+  xlab = "Survival Time (days)",
+  ylab = "Survival Probability",
+  title = "Kaplan-Meier Survival Curve by Religion",
+  legend.title = "Religion",
+  palette = c("#0072B2", "#D55E00", "#009E73"),
+  ggtheme = theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
+)
+print(p_religion)
+ggsave("output/plots/KM/KM_plot_religion.png", plot = p_religion$plot, width = 7, height = 5)
+
+
+#V.For martial status
+# Cox model for marital_status
+model_marital <- coxph(Surv(surv_time, event) ~ marital_status, data = mydata)
+capture.output(summary(model_marital), file = "output/tables/summary/cox_summary_marital_status.txt")
+capture.output(round(Anova(model_marital, type = 3), 4), file = "output/tables/anova/cox_anova_marital_status.txt")
+
+
+# KM plot for marital_status
+km_marital <- survfit(Surv(surv_time, event) ~ marital_status, data = mydata)
+p_marital <- ggsurvplot(
+  km_marital,
+  data = mydata,
+  pval = TRUE,
+  conf.int = TRUE,
+  xlab = "Survival Time (days)",
+  ylab = "Survival Probability",
+  title = "Kaplan-Meier Survival Curve by Marital Status",
+  legend.title = "Marital Status",
+  palette = c("#0072B2", "#D55E00", "#009E73"),
+  ggtheme = theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
+)
+print(p_marital)
+ggsave("output/plots/KM/KM_plot_marital_status.png", plot = p_marital$plot, width = 7, height = 5)
+
+
+#VI.For tumor type
+# Cox model for tum0r_type
+model_tumor <- coxph(Surv(surv_time, event) ~ tum0r_type, data = mydata)
+capture.output(summary(model_tumor), file = "output/tables/summary/cox_summary_tumor_type.txt")
+capture.output(round(Anova(model_tumor, type = 3), 4), file = "output/tables/anova/cox_anova_tumor_type.txt")
+
+
+# KM plot for tum0r_type
+km_tumor <- survfit(Surv(surv_time, event) ~ tum0r_type, data = mydata)
+p_tumor <- ggsurvplot(
+  km_tumor,
+  data = mydata,
+  pval = TRUE,
+  conf.int = TRUE,
+  xlab = "Survival Time (days)",
+  ylab = "Survival Probability",
+  title = "Kaplan-Meier Survival Curve by Tumor Type",
+  legend.title = "Tumor Type",
+  palette = c("#0072B2", "#D55E00", "#009E73"),
+  ggtheme = theme_minimal() + theme(plot.title = element_text(hjust = 0.5))
+)
+print(p_tumor)
+ggsave("output/plots/KM/KM_plot_tumor_type.png", plot = p_tumor$plot, width = 7, height = 5)
+
+
+
+# 7. Multivariable Cox Model  ---------------------------------
+# Fit Cox model with all variables
+model4 <- coxph(Surv(surv_time, event) ~ sex + age + education + religion + marital_status + tum0r_type,
+                ties = "breslow", data = mydata)
+capture.output(summary(model4), file="output/tables/summary/model4_all_vars_summary.txt")
+capture.output(round(Anova(model4, type=3), 4), file="output/tables/anova/model4_all_vars_Anova.txt")
+
+
+# PH test
+ph_test4 <- cox.zph(model4)
+capture.output(ph_test4, file="output/tables/PH_tests/Model4_PH_test.txt")
+png("output/plots/PH/PH_Assumption_Model4.png", width=800, height=600)
+plot(ph_test4)
+dev.off()
+
+# Forest plot
+forest_plot4 <- ggforest(
+  model4,
+  data = mydata,
+  main = "Hazard Ratios - Full Model (Model4)",
+  cpositions = c(0.02,0.22,0.4),
+  fontsize = 0.7,
+  refLabel = "HR = 1",
+  noDigits = 2
+)
+ggsave("output/plots/Forest/Forest_plot_Model4.png", forest_plot4, width=8, height=6)
+
+       
+# 8. Nested Models for Model Selection  ------------------------
+
+# 8.1 Full model (model5a)
+model5a <- coxph(Surv(surv_time, event) ~ sex + age + education + religion + marital_status + tum0r_type, data = mydata)
+capture.output(summary(model5a), file = "output/tables/summary/model5a_full_model_summary.txt")
+capture.output(round(Anova(model5a, type = 3), 4), file = "output/tables/anova/model5a_full_model_Anova.txt")
+
+# PH assumption & plot
+test_ph5a <- cox.zph(model5a)
+capture.output(test_ph5a, file = "output/tables/PH_tests/PH_Assumption_model5a.txt")
+png("output/plots/PH/PH_Assumption_model5a.png", width = 800, height = 600)
+plot(test_ph5a)
+dev.off()
+
+ggforest(model5a, data = mydata, main = "Hazard Ratios - model5a")
+ggsave("output/plots/Forest/Forest_plot_model5a.png", width = 8, height = 6)
+
+# 8.2 Model without sex (model5b)
+model5b <- coxph(Surv(surv_time, event) ~ age + education + religion + marital_status + tum0r_type, data = mydata)
+capture.output(summary(model5b), file = "output/tables/summary/model5b_no_sex_summary.txt")
+capture.output(round(Anova(model5b, type = 3), 4), file = "output/tables/anova/model5b_no_sex_Anova.txt")
+
+# PH assumption & plot
+test_ph5b <- cox.zph(model5b)
+capture.output(test_ph5b, file = "output/tables/PH_tests/PH_Assumption_model5b.txt")
+png("output/plots/PH/PH_Assumption_model5b.png", width = 800, height = 600)
+plot(test_ph5b)
+dev.off()
+
+ggforest(model5b, data = mydata, main = "Hazard Ratios - model5b")
+ggsave("output/plots/Forest/Forest_plot_model5b.png", width = 8, height = 6)
+
+# 8.3 Model with education, marital_status, tum0r_type only (model5c)
+model5c <- coxph(Surv(surv_time, event) ~ education + marital_status + tum0r_type, data = mydata)
+capture.output(summary(model5c), file = "output/tables/summary/model5c_summary.txt")
+capture.output(round(Anova(model5c, type = 3), 4), file = "output/tables/anova/model5c_Anova.txt")
+
+ggforest(model5c, data = mydata, main = "Hazard Ratios - model5c")
+ggsave("output/plots/Forest/Forest_plot_model5c.png", width = 8, height = 6)
+
+# 8.4 Model with education and tum0r_type only (model5d)
+model5d <- coxph(Surv(surv_time, event) ~ education + tum0r_type, data = mydata)
+capture.output(summary(model5d), file = "output/tables/summary/model5d_summary.txt")
+capture.output(round(Anova(model5d, type = 3), 4), file = "output/tables/anova/model5d_Anova.txt")
+
+ggforest(model5d, data = mydata, main = "Hazard Ratios - model5d")
+ggsave("output/plots/Forest/Forest_plot_model5d.png", width = 8, height = 6)
+

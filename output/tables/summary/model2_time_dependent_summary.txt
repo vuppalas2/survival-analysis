@@ -1,0 +1,21 @@
+Call:
+coxph(formula = Surv(start_time, surv_time, event) ~ education + 
+    x2 + x3, data = mydata2)
+
+  n= 56193, number of events= 442 
+
+                        coef exp(coef) se(coef)      z Pr(>|z|)
+educationIlliterate  0.19069   1.21009  0.17518  1.089    0.276
+x2                  -0.08794   0.91581  0.09402 -0.935    0.350
+x3                   0.08862   1.09267  0.09301  0.953    0.341
+
+                    exp(coef) exp(-coef) lower .95 upper .95
+educationIlliterate    1.2101     0.8264    0.8584     1.706
+x2                     0.9158     1.0919    0.7617     1.101
+x3                     1.0927     0.9152    0.9106     1.311
+
+Concordance= 0.535  (se = 0.01 )
+Likelihood ratio test= 15.14  on 3 df,   p=0.002
+Wald test            = 11.36  on 3 df,   p=0.01
+Score (logrank) test = 12.53  on 3 df,   p=0.006
+

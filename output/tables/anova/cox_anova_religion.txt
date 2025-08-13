@@ -1,0 +1,7 @@
+Analysis of Deviance Table
+ Cox model: response is Surv(surv_time, event)
+Terms added sequentially (first to last)
+
+         loglik  Chisq Df Pr(>|Chi|)
+NULL      -2534                     
+religion  -2534 0.0648  2     0.9681

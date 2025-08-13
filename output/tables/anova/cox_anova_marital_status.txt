@@ -1,0 +1,7 @@
+Analysis of Deviance Table
+ Cox model: response is Surv(surv_time, event)
+Terms added sequentially (first to last)
+
+                loglik  Chisq Df Pr(>|Chi|)
+NULL           -2534.0                     
+marital_status -2533.5 1.0198  2     0.6005

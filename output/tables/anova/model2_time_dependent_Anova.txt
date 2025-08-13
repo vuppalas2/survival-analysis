@@ -1,0 +1,5 @@
+Analysis of Deviance Table (Type III tests)
+          LR Chisq Df Pr(>Chisq)
+education   1.1513  1     0.2833
+x2          1.1114  1     0.2918
+x3          1.1670  1     0.2800

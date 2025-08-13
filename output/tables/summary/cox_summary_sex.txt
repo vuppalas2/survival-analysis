@@ -1,0 +1,17 @@
+Call:
+coxph(formula = Surv(surv_time, event) ~ sex, data = mydata, 
+    ties = "breslow")
+
+  n= 682, number of events= 442 
+
+              coef exp(coef) se(coef)      z Pr(>|z|)
+sexFemale -0.02396   0.97633  0.12435 -0.193    0.847
+
+          exp(coef) exp(-coef) lower .95 upper .95
+sexFemale    0.9763      1.024    0.7652     1.246
+
+Concordance= 0.501  (se = 0.01 )
+Likelihood ratio test= 0.04  on 1 df,   p=0.8
+Wald test            = 0.04  on 1 df,   p=0.8
+Score (logrank) test = 0.04  on 1 df,   p=0.8
+

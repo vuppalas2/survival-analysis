@@ -1,0 +1,7 @@
+                chisq df       p
+age             1.264  1   0.261
+education       0.279  1   0.597
+religion        0.786  2   0.675
+marital_status  8.465  2   0.015
+tum0r_type     21.157  2 2.5e-05
+GLOBAL         34.892  8 2.8e-05

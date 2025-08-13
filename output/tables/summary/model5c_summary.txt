@@ -1,0 +1,27 @@
+Call:
+coxph(formula = Surv(surv_time, event) ~ education + marital_status + 
+    tum0r_type, data = mydata)
+
+  n= 682, number of events= 442 
+
+                                    coef exp(coef) se(coef)      z Pr(>|z|)    
+educationIlliterate               0.4243    1.5285   0.1361  3.118 0.001822 ** 
+marital_statusSeparated/Divorced -0.2406    0.7862   0.2443 -0.985 0.324770    
+marital_statusMarried            -0.0748    0.9279   0.1498 -0.499 0.617514    
+tum0r_typeRegional                0.7571    2.1320   0.1398  5.417 6.06e-08 ***
+tum0r_typeAdvanced                0.4932    1.6376   0.1334  3.698 0.000218 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+                                 exp(coef) exp(-coef) lower .95 upper .95
+educationIlliterate                 1.5285     0.6542    1.1707     1.996
+marital_statusSeparated/Divorced    0.7862     1.2720    0.4871     1.269
+marital_statusMarried               0.9279     1.0777    0.6918     1.245
+tum0r_typeRegional                  2.1320     0.4690    1.6211     2.804
+tum0r_typeAdvanced                  1.6376     0.6106    1.2609     2.127
+
+Concordance= 0.602  (se = 0.015 )
+Likelihood ratio test= 43.35  on 5 df,   p=3e-08
+Wald test            = 39.5  on 5 df,   p=2e-07
+Score (logrank) test = 40.47  on 5 df,   p=1e-07
+

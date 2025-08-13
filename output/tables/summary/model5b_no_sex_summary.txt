@@ -1,0 +1,33 @@
+Call:
+coxph(formula = Surv(surv_time, event) ~ age + education + religion + 
+    marital_status + tum0r_type, data = mydata)
+
+  n= 682, number of events= 442 
+
+                                      coef exp(coef)  se(coef)      z Pr(>|z|)    
+age                               0.001958  1.001960  0.004025  0.486 0.626625    
+educationIlliterate               0.425178  1.529863  0.137186  3.099 0.001940 ** 
+religionChristian                 0.078710  1.081891  0.190775  0.413 0.679913    
+religionMuslim                    0.006242  1.006261  0.123691  0.050 0.959754    
+marital_statusSeparated/Divorced -0.260005  0.771048  0.247250 -1.052 0.292989    
+marital_statusMarried            -0.078878  0.924153  0.151454 -0.521 0.602502    
+tum0r_typeRegional                0.753266  2.123925  0.140733  5.352 8.68e-08 ***
+tum0r_typeAdvanced                0.494764  1.640112  0.133379  3.709 0.000208 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+                                 exp(coef) exp(-coef) lower .95 upper .95
+age                                 1.0020     0.9980    0.9941     1.010
+educationIlliterate                 1.5299     0.6537    1.1692     2.002
+religionChristian                   1.0819     0.9243    0.7444     1.572
+religionMuslim                      1.0063     0.9938    0.7896     1.282
+marital_statusSeparated/Divorced    0.7710     1.2969    0.4749     1.252
+marital_statusMarried               0.9242     1.0821    0.6868     1.244
+tum0r_typeRegional                  2.1239     0.4708    1.6119     2.799
+tum0r_typeAdvanced                  1.6401     0.6097    1.2628     2.130
+
+Concordance= 0.601  (se = 0.015 )
+Likelihood ratio test= 43.79  on 8 df,   p=6e-07
+Wald test            = 39.94  on 8 df,   p=3e-06
+Score (logrank) test = 40.91  on 8 df,   p=2e-06
+

@@ -1,0 +1,20 @@
+Call:
+coxph(formula = Surv(surv_time, event) ~ tum0r_type, data = mydata)
+
+  n= 682, number of events= 442 
+
+                     coef exp(coef) se(coef)     z Pr(>|z|)    
+tum0r_typeRegional 0.7175    2.0493   0.1392 5.156 2.52e-07 ***
+tum0r_typeAdvanced 0.5723    1.7724   0.1306 4.384 1.17e-05 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+                   exp(coef) exp(-coef) lower .95 upper .95
+tum0r_typeRegional     2.049     0.4880     1.560     2.692
+tum0r_typeAdvanced     1.772     0.5642     1.372     2.289
+
+Concordance= 0.581  (se = 0.014 )
+Likelihood ratio test= 31.21  on 2 df,   p=2e-07
+Wald test            = 28.08  on 2 df,   p=8e-07
+Score (logrank) test = 29.02  on 2 df,   p=5e-07
+
